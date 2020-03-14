@@ -54,6 +54,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /pets/{id}:
+    description: endpoints for pets id
+    summary: endpoints for pet by id
+    get:
+      description: find pet by id
+      operationId: findPetById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: mode
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: pet response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /humans:
     get:
       description: find humans

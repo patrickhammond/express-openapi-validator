@@ -49,6 +49,21 @@ describe(packageJson.name, () => {
 
           return res.json(json);
         });
+        app.get(`${app.basePath}/pets/:id`, (req, res) => {
+          let json = {};
+          if (req.query.mode === 'array') {
+            json = [];
+          } else {
+            json = {
+              id: req.params.id,
+              name: 'name',
+              tag: 'tag',
+              bought_at: today.toISOString(),
+            };
+          }
+
+          return res.json(json);
+        });
         app.post(`${app.basePath}/no_additional_props`, (req, res) => {
           res.json(req.body);
         });
@@ -96,6 +111,17 @@ describe(packageJson.name, () => {
       .expect(500)
       .then((r: any) => {
         expect(r.body.message).to.contain('body required');
+        expect(r.body)
+          .to.have.property('code')
+          .that.equals(500);
+      }));
+
+  it('should fail if response is array instead of object', async () =>
+    request(app)
+      .get(`${app.basePath}/pets/1?mode=array`)
+      .expect(500)
+      .then((r: any) => {
+        expect(r.body.message).to.contain('should be object');
         expect(r.body)
           .to.have.property('code')
           .that.equals(500);
